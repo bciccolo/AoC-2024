@@ -114,6 +114,25 @@ def find_xmas():
     return count
 
 
+def find_x_mas():
+    count = 0
+
+    for y in range(1, len(grid) - 1):
+        for x in range(1, len(grid[y]) - 1):
+            if grid[y][x] == 'A':
+                ul = grid[y - 1][x - 1]
+                br = grid[y + 1][x + 1]
+
+                ur = grid[y - 1][x + 1]
+                bl = grid[y + 1][x - 1]
+
+                if ((ul == 'S' and br == 'M') or (ul == 'M' and br == 'S')) and ((ur == 'S' and bl == 'M') or (ur == 'M' and bl == 'S')):
+                    count += 1
+
+    return count
+
+
+# Not how part 1 works but cool nonetheless
 def find_xmas_strands():
     count = 0
 
@@ -137,6 +156,5 @@ def find_xmas_strands():
 
 load_data()
 # pprint(grid)
-count = find_xmas()
-
-print('Part 1: '  + str(count))
+print('Part 1: '  + str(find_xmas()))
+print('Part 2: '  + str(find_x_mas()))
