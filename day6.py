@@ -1,4 +1,7 @@
-FILE = 'day6-snippet.dat'
+import copy
+from pprint import pprint
+
+FILE = 'day6.dat'
 
 UP = 0
 DOWN = 1
@@ -20,12 +23,14 @@ def find_starting_point():
 def follow_path():
     y, x = find_starting_point()
     direction = UP
-    while True:
+
+    counter = 0
+    while counter < len(grid) * len(grid[Y]):
         grid[y][x] = 'X'
 
         if direction == UP:
             if y == 0:
-                return
+                return True
             if grid[y - 1][x] == '#':
                 direction = RIGHT
             else:
@@ -33,7 +38,7 @@ def follow_path():
 
         elif direction == DOWN:
             if y == len(grid) - 1:
-                return
+                return True
             if grid[y + 1][x] == '#':
                 direction = LEFT
             else:
@@ -41,7 +46,7 @@ def follow_path():
 
         elif direction == RIGHT:
             if x == len(grid[y]) - 1:
-                return
+                return True
             if grid[y][x + 1] == '#':
                 direction = DOWN
             else:
@@ -49,11 +54,15 @@ def follow_path():
 
         elif direction == LEFT:
             if x == 0:
-                return
+                return True
             if grid[y][x - 1] == '#':
                 direction = UP
             else:
                 x -= 1
+
+        counter += 1
+
+    return False
 
 
 def load_data():
@@ -68,14 +77,25 @@ def load_data():
 
 
 load_data()
-follow_path()
+original = copy.deepcopy(grid)
 
-for row in grid:
-    print("".join(row))
+# Part 1
+follow_path()
 
 count = 0
 for row in grid:
     count += row.count('X')
 
 print('Part 1: '  + str(count))
-print('Part 2: '  + str(0))
+
+# Part 2 - this is grossly inefficient but it works (just wait ~50 seconds)
+count = 0
+for y in range(len(grid)):
+    for x in range(len(grid[y])):
+        grid = copy.deepcopy(original)
+        if grid[y][x] == '.':
+            grid[y][x] = '#'
+            if not follow_path():
+                count += 1
+
+print('Part 2: '  + str(count))
