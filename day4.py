@@ -22,13 +22,13 @@ def find_neighbors(y, x, letter):
     if y > 0:
         if grid[y - 1][x] == letter:
             coordinates.append([y - 1, x])
-        if x > 1 and grid[y - 1][x - 1] == letter:
+        if x > 0 and grid[y - 1][x - 1] == letter:
             coordinates.append([y - 1, x - 1])
         if x < len(grid[y - 1]) - 1 and grid[y - 1][x + 1] == letter:
             coordinates.append([y - 1, x + 1])
 
     # Check row of
-    if x > 1 and grid[y][x - 1] == letter:
+    if x > 0 and grid[y][x - 1] == letter:
         coordinates.append([y, x - 1])
     if x < len(grid[y]) - 1 and grid[y][x + 1] == letter:
         coordinates.append([y, x + 1])
@@ -37,7 +37,7 @@ def find_neighbors(y, x, letter):
     if y < len(grid) - 1:
         if grid[y + 1][x] == letter:
             coordinates.append([y + 1, x])
-        if x > 1 and grid[y + 1][x - 1] == letter:
+        if x > 0 and grid[y + 1][x - 1] == letter:
             coordinates.append([y + 1, x - 1])
         if x < len(grid[y + 1]) - 1 and grid[y + 1][x + 1] == letter:
             coordinates.append([y + 1, x + 1])
