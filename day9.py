@@ -7,7 +7,6 @@ def compact_files(disk_layout):
             last_index = j
             break
 
-    # for i in range(len(disk_layout)):
     i = 0
     while i < last_index:
         if disk_layout[i] == '.':
