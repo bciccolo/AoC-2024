@@ -10,6 +10,7 @@ nodes = dict()
 def check_bounds(y, x):
     return y >= 0 and y < len(grid) and x >= 0 and x < len(grid[y])
 
+
 def load_data():
     file = open(FILE, 'r')
     lines = file.readlines()
