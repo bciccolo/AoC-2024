@@ -1,30 +1,41 @@
-FILE = 'day11-snippet.dat'
+FILE = 'day11.dat'
 
-def blink(iterations):
-    file = open(FILE, 'r')
-    lines = file.readlines()
-    stones = [int(x) for x in lines[0].strip().split()]
+def add_or_update(dictionary, value, count):
+    if value in dictionary.keys():
+        dictionary[value] += count
+    else:
+        dictionary[value] = count
 
-    # print(stones)
+
+def blink(stones, iterations):
+    stone_counts = dict()
+    for stone in stones:
+        stone_counts[stone] = 1
 
     for i in range(iterations):
-        print(i)
-        next = []
-        for stone in stones:
+        next = dict()
+        for stone, count in stone_counts.items():
             if stone == 0:
-                next.append(1)
+                add_or_update(next, 1, count)
             elif len(str(stone)) % 2 == 0:
                 stone_string = str(stone)
                 middle = len(stone_string) // 2
-                next.append(int(stone_string[:middle]))
-                next.append(int(stone_string[middle:]))
+                add_or_update(next, int(stone_string[:middle]), count)
+                add_or_update(next, int(stone_string[middle:]), count)
             else:
-                next.append(stone * 2024)
-        stones = next
+                add_or_update(next, stone * 2024, count)
 
-        print(stones)
+        stone_counts = next
+        # print(stone_counts)
 
-    return len(stones)
+    total = sum(stone_counts.values())
 
-print("Part 1: " + str(blink(25)))
-# print("Part 2: " + str(blink(75)))
+    return total
+
+
+file = open(FILE, 'r')
+lines = file.readlines()
+stones = [int(x) for x in lines[0].strip().split()]
+
+print("Part 1: " + str(blink(stones, 25)))
+print("Part 2: " + str(blink(stones, 75)))
