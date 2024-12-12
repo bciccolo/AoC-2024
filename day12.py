@@ -5,7 +5,7 @@ FILE = 'day12.dat'
 plants = set()
 plots = []
 
-def calculate_price():
+def calculate_price(method):
     total = 0
 
     for plant in plants:
@@ -16,13 +16,16 @@ def calculate_price():
             for x in range(len(plots_copy[y])):
                 if plots_copy[y][x] == plant:
                     map_region(plots_copy, plant, region_index, y, x)
-                    total += calculate_region_price(plots_copy, plant + str(region_index))
+                    if method:
+                        total += calculate_region_price_perimeter(plots_copy, plant + str(region_index))
+                    else:
+                        total += calculate_region_price_sides(plots_copy, plant + str(region_index))
                     region_index += 1
 
     return total
 
 
-def calculate_region_price(map, plant):
+def calculate_region_price_perimeter(map, plant):
     area = 0
     perimeter = 0
 
@@ -49,9 +52,12 @@ def calculate_region_price(map, plant):
                     perimeter -= 1
 
     price = area * perimeter
-    print('A region of ' + plant + ' plants with price ' + str(area) + ' * ' + str(perimeter) + ' = ' + str(price))
+    # print('A region of ' + plant + ' plants with price ' + str(area) + ' * ' + str(perimeter) + ' = ' + str(price))
 
     return price
+
+def calculate_region_price_sides(map, plant):
+    return 0
 
 def map_region(map, plant, index, y, x):
     map[y][x] = plant + str(index)
@@ -85,7 +91,8 @@ def load_data():
 
     file.close()
 
-load_data()
-price = calculate_price()
 
-print("Part 1: " + str(price))
+load_data()
+
+print("Part 1: " + str(calculate_price(True)))
+print("Part 2: " + str(calculate_price(False)))
