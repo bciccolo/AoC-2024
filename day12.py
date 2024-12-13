@@ -18,60 +18,28 @@ def calculate_price(method):
                 if plots_copy[y][x] == plant:
                     map_region(plots_copy, plant, region_index, y, x)
                     # pprint(plots_copy)
+
+                    area = 0
+                    corners = 0
+                    perimeter = 0
+                    for r in range(len(plots_copy)):
+                        for c in range(len(plots_copy[r])):
+                            if plots_copy[r][c].startswith(plant + str(region_index)):
+                                area += 1
+                                corners += int(plots_copy[r][c][-3:-2])
+                                perimeter += int(plots_copy[r][c][-1:])
+
+                    # print('A region of ' + plant + ' plants with price ' + str(area) + ' * ' + str(perimeter) + ' = ' + str(area * perimeter))
+                    # print('A region of ' + plant + ' plants with price ' + str(area) + ' * ' + str(corners) + ' = ' + str(area * corners))
+
                     if method:
-                        total += calculate_region_price_perimeter(plots_copy, plant + str(region_index))
+                        total += area * perimeter
                     else:
-                        total += calculate_region_price_sides(plots_copy, plant + str(region_index))
+                        total += area * corners
+
                     region_index += 1
 
     return total
-
-
-def calculate_region_price_perimeter(map, plant):
-    area = 0
-    perimeter = 0
-
-    for y in range(len(map)):
-        for x in range(len(map[y])):
-            if map[y][x].startswith(plant):
-                area += 1
-                perimeter += 4
-
-                # Check up
-                if y > 0 and map[y - 1][x].startswith(plant):
-                    perimeter -= 1
-
-                # Check down
-                if y < len(map) - 1 and map[y + 1][x].startswith(plant):
-                    perimeter -= 1
-
-                # Check left
-                if x > 0 and map[y][x - 1].startswith(plant):
-                    perimeter -= 1
-
-                # Check right
-                if x < len(map[y]) - 1 and map[y][x + 1].startswith(plant):
-                    perimeter -= 1
-
-    price = area * perimeter
-    # print('A region of ' + plant + ' plants with price ' + str(area) + ' * ' + str(perimeter) + ' = ' + str(price))
-
-    return price
-
-
-def calculate_region_price_sides(map, plant):
-    area = 0
-    corners = 0
-    for y in range(len(map)):
-        for x in range(len(map[y])):
-            if map[y][x].startswith(plant):
-                area += 1
-                corners += int(map[y][x][-1:])
-
-    price = area * corners
-    # print('A region of ' + plant + ' plants with price ' + str(area) + ' * ' + str(corners) + ' = ' + str(price))
-
-    return price
 
 
 def map_region(map, plant, index, y, x):
@@ -90,6 +58,7 @@ def map_region(map, plant, index, y, x):
     if y > 0:
         if map[y - 1][x] == plant:
             map_region(map, plant, index, y - 1, x)
+
         if map[y - 1][x].startswith(plant):
             up = True
         if x > 0 and map[y - 1][x - 1].startswith(plant):
@@ -101,6 +70,7 @@ def map_region(map, plant, index, y, x):
     if y < len(map) - 1:
         if map[y + 1][x] == plant:
             map_region(map, plant, index, y + 1, x)
+
         if map[y + 1][x].startswith(plant):
             down = True
         if x > 0 and map[y + 1][x - 1].startswith(plant):
@@ -136,7 +106,21 @@ def map_region(map, plant, index, y, x):
     if (down and right and not dr) or (not down and not right):
         corners += 1
 
-    map[y][x] += '.' + str(corners)
+    perimeter = 4
+
+    if up:
+        perimeter -= 1
+
+    if down:
+        perimeter -= 1
+
+    if left:
+        perimeter -= 1
+
+    if right:
+        perimeter -= 1
+
+    map[y][x] += '.' + str(corners) + '.' + str(perimeter)
 
 
 def load_data():
