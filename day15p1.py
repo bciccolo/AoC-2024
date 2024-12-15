@@ -81,7 +81,7 @@ def push_down():
 
 
 def push_left():
-    # Find the first an opening starting going down from current position (skip the block immediately below)
+    # Find the first an opening starting going down from current position (skip the block immediately to the left)
     opening_x = 0
     for x in range(robot_x - 2, 0, -1):
         if grid[robot_y][x] == '#':
@@ -98,7 +98,7 @@ def push_left():
 
 
 def push_right():
-    # Find the first an opening starting going down from current position (skip the block immediately below)
+    # Find the first an opening starting going down from current position (skip the block immediately to the right)
     opening_x = 0
     for x in range(robot_x + 2, len(grid[robot_y])):
         if grid[robot_y][x] == '#':
