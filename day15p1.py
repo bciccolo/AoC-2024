@@ -47,91 +47,71 @@ def load_data():
 
 
 def push_up():
-    push = False
-
     # Find the first an opening starting going up from current position (skip the block immediately above)
     opening_y = 0
     for y in range(robot_y - 2, 0, -1):
         if grid[y][robot_x] == '#':
-            break
+            return
 
         if grid[y][robot_x] == '.':
             opening_y = y
-            push = True
             break
 
     # "Shift" the boxes by swapping the first box with the first opening
-    if push:
+    if opening_y > 0:
         grid[opening_y][robot_x] = 'O'
         grid[robot_y - 1][robot_x] = '.'
 
-    return push
-
 
 def push_down():
-    push = False
-
     # Find the first an opening starting going down from current position (skip the block immediately below)
     opening_y = 0
     for y in range(robot_y + 2, len(grid)):
         if grid[y][robot_x] == '#':
-            break
+            return
 
         if grid[y][robot_x] == '.':
             opening_y = y
-            push = True
             break
 
     # "Shift" the boxes by swapping the first box with the first opening
-    if push:
+    if opening_y > 0:
         grid[opening_y][robot_x] = 'O'
         grid[robot_y + 1][robot_x] = '.'
 
-    return push
-
 
 def push_left():
-    push = False
-
     # Find the first an opening starting going down from current position (skip the block immediately below)
     opening_x = 0
     for x in range(robot_x - 2, 0, -1):
         if grid[robot_y][x] == '#':
-            break
+            return
 
         if grid[robot_y][x] == '.':
             opening_x = x
-            push = True
             break
 
     # "Shift" the boxes by swapping the first box with the first opening
-    if push:
+    if opening_x > 0:
         grid[robot_y][opening_x] = 'O'
         grid[robot_y][robot_x - 1] = '.'
 
-    return push
-
 
 def push_right():
-    push = False
-
     # Find the first an opening starting going down from current position (skip the block immediately below)
     opening_x = 0
     for x in range(robot_x + 2, len(grid[robot_y])):
         if grid[robot_y][x] == '#':
-            break
+            return
 
         if grid[robot_y][x] == '.':
             opening_x = x
-            push = True
             break
 
     # "Shift" the boxes by swapping the first box with the first opening
-    if push:
+    if opening_x > 0:
         grid[robot_y][opening_x] = 'O'
         grid[robot_y][robot_x + 1] = '.'
-
-    return push
 
 
 def run_instructions():
