@@ -162,14 +162,14 @@ def run_instructions():
 load_data()
 find_robot()
 
-for row in grid:
-    print(''.join(row))
+# for row in grid:
+#     print(''.join(row))
 # print(instructions)
 # print(robot_y, robot_x)
 
 run_instructions()
 
-for row in grid:
-    print(''.join(row))
+# for row in grid:
+#     print(''.join(row))
 
 print('Part 1: ' + str(calculate_gps_values()))
