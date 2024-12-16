@@ -28,6 +28,7 @@ def blink(stones, iterations):
         stone_counts = next
         # print(stone_counts)
 
+    # print(len(stone_counts))
     total = sum(stone_counts.values())
 
     return total
