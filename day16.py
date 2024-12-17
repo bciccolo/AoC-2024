@@ -36,7 +36,7 @@ def follow_maze(attempt):
     visited = attempt.visited
     points = attempt.points
 
-    while grid[y][x] != 'E' or points > lowest_cost:
+    while grid[y][x] != 'E' and points < lowest_cost:
         if (y, x) in visited:
             break
         visited.add((y, x))
