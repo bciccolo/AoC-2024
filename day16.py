@@ -1,20 +1,17 @@
 import copy
+import time
 
 FILE = 'day16-snippet-b.dat'
 
 grid = []
-path_values = []
 attempts = []
-attempted_vectors = dict()
+best_vector_points = dict()
+lowest_cost = 1_000_000_000_000
 
 UP = 0
 RIGHT = 1
 DOWN = 2
 LEFT = 3
-
-X = 0
-Y = 1
-DIRECTION = 2
 
 class Attempt:
     def __init__(self, vector, visited, points):
@@ -27,57 +24,55 @@ def find_start():
     for y in range(len(grid)):
         for x in range(len(grid[y])):
             if grid[y][x] == 'S':
-                return (x, y)
+                return (y, x)
 
 
 def follow_maze(attempt):
-    y = attempt.vector[Y]
-    x = attempt.vector[X]
-    direction = attempt.vector[DIRECTION]
+    global lowest_cost
+
+    y = attempt.vector[0]
+    x = attempt.vector[1]
+    direction = attempt.vector[2]
     visited = attempt.visited
     points = attempt.points
 
-    while grid[y][x] != 'E':
-        if (x, y, direction) in visited:
+    while grid[y][x] != 'E' or points > lowest_cost:
+        if (y, x) in visited:
             break
+        visited.add((y, x))
 
-        visited.add((x, y, direction))
+        current_vector = (y, x, direction)
+        if current_vector in best_vector_points.keys() and best_vector_points[current_vector] < points:
+            break
+        best_vector_points[current_vector] = points
 
         # Turn counter-clockwise
         if direction == UP and grid[y][x - 1] != '#':
-            vector = (x, y, LEFT)
-            if vector not in visited:
-                attempts.append(Attempt(vector, visited, points + 1000))
+            vector = (y, x - 1, LEFT)
+            attempts.append(Attempt(vector, visited, points + 1001))
         elif direction == LEFT and grid[y + 1][x] != '#':
-            vector = (x, y, DOWN)
-            if vector not in visited:
-                attempts.append(Attempt(vector, visited, points + 1000))
+            vector = (y + 1, x,DOWN)
+            attempts.append(Attempt(vector, visited, points + 1001))
         elif direction == DOWN and grid[y][x + 1] != '#':
-            vector = (x, y, RIGHT)
-            if vector not in visited:
-                attempts.append(Attempt(vector, visited, points + 1000))
+            vector = (y, x + 1, RIGHT)
+            attempts.append(Attempt(vector, visited, points + 1001))
         elif direction == RIGHT and grid[y - 1][x] != '#':
-            vector = (x, y, UP)
-            if vector not in visited:
-                attempts.append(Attempt(vector, visited, points + 1000))
+            vector = (y - 1, x, UP)
+            attempts.append(Attempt(vector, visited, points + 1001))
 
         # Turn clockwise
         if direction == UP and grid[y][x + 1] != '#':
-            vector = (x, y, RIGHT)
-            if vector not in visited:
-                attempts.append(Attempt(vector, visited, points + 1000))
+            vector = (y, x + 1, RIGHT)
+            attempts.append(Attempt(vector, visited, points + 1001))
         elif direction == RIGHT and grid[y + 1][x] != '#':
-            vector = (x, y, DOWN)
-            if vector not in visited:
-                attempts.append(Attempt(vector, visited, points + 1000))
+            vector = (y + 1, x, DOWN)
+            attempts.append(Attempt(vector, visited, points + 1001))
         elif direction == DOWN and grid[y][x - 1] != '#':
-            vector = (x, y, LEFT)
-            if vector not in visited:
-                attempts.append(Attempt(vector, visited, points + 1000))
+            vector = (y, x - 1, LEFT)
+            attempts.append(Attempt(vector, visited, points + 1001))
         elif direction == LEFT and grid[y - 1][x] != '#':
-            vector = (x, y, UP)
-            if vector not in visited:
-                attempts.append(Attempt(vector, visited, points + 1000))
+            vector = (y - 1, x, UP)
+            attempts.append(Attempt(vector, visited, points + 1001))
 
         # Move forward
         if direction == UP:
@@ -104,7 +99,8 @@ def follow_maze(attempt):
         points += 1
 
     if grid[y][x] == 'E':
-        path_values.append(points)
+        if points < lowest_cost:
+            lowest_cost = points
 
 
 def load_data():
@@ -117,18 +113,20 @@ def load_data():
 
 
 load_data()
+y, x = find_start()
+attempts.append(Attempt((y, x, RIGHT), set(), 0))
 
-start = find_start()
-attempts.append(Attempt((start[X], start[Y], RIGHT), set(), 0))
+start = time.time()
 while len(attempts) > 0:
     attempt = attempts.pop()
 
     vector = attempt.vector
-    if vector in attempted_vectors.keys():
-        if attempted_vectors[vector] < attempt.points:
-            continue
-    attempted_vectors[vector] = attempt.points
+    if attempt.points > lowest_cost or (vector in best_vector_points.keys() and best_vector_points[vector] < attempt.points):
+        continue
+    best_vector_points[vector] = attempt.points
 
     follow_maze(attempt)
 
-print('Part 1: ' + str(min(path_values)))
+duration = round(time.time() - start, 4)
+print('Run time: ' + str(duration) + ' seconds')
+print('Part 1: ' + str(lowest_cost))
