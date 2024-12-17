@@ -6,7 +6,8 @@ FILE = 'day16.dat'
 grid = []
 attempts = []
 best_vector_points = dict()
-lowest_cost = 1_000_000_000_000 # Part 1: 200,000 is too high; 50,000 is too low
+lowest_cost = 500_000 # I know this value is too high because of puzzle feedback from an incorrect answer
+best_seats = set()
 
 UP = 0
 RIGHT = 1
@@ -107,9 +108,11 @@ def follow_maze(attempt):
         points += 1
 
     if grid[y][x] == 'E':
-        if points < lowest_cost:
+        if points <= lowest_cost:
+            if points < lowest_cost:
+                best_seats.clear()
             lowest_cost = points
-            print(lowest_cost)
+            best_seats.update(visited)
 
 
 def load_data():
@@ -139,3 +142,4 @@ while len(attempts) > 0:
 duration = round(time.time() - start, 4)
 print('Run time: ' + str(duration) + ' seconds')
 print('Part 1: ' + str(lowest_cost))
+print('Part 2: ' + str(len(best_seats) + 1))
